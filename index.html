@@ -1,0 +1,2491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kairos Beta | Premium Booking for Elite Consultants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+    <style>
+        /* ===== CSS RESET & VARIABLES ===== */
+        :root {
+            --color-primary: #0f172a;
+            --color-primary-dark: #020617;
+            --color-accent: #7c3aed;
+            --color-accent-light: #8b5cf6;
+            --color-secondary: #f59e0b;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-info: #3b82f6;
+            --color-light: #f8fafc;
+            --color-dark: #1e293b;
+            --color-border: #e2e8f0;
+            --color-text: #334155;
+            --color-text-muted: #64748b;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius-sm: 10px;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --border-radius-xl: 32px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            color: var(--color-text);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ===== TYPOGRAPHY & UTILITIES ===== */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--color-primary);
+            font-weight: 700;
+            line-height: 1.2;
+            font-family: var(--font-display);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .w-full { width: 100%; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.5); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            font-family: var(--font-sans);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            color: white;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.4);
+            animation: glow 2s infinite;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.05);
+            border-color: var(--color-accent-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-lg {
+            padding: 1.25rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .btn-xl {
+            padding: 1.5rem 4rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* ===== HEADER ===== */
+        .site-header {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .logo-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: var(--color-primary);
+            font-family: var(--font-display);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            text-align: center;
+            padding: 6rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .hero-badge {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            color: white;
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            border-radius: 100px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+            animation: pulse 2s infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 50%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--color-text-muted);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* ===== BETA OFFER CARD ===== */
+        .beta-offer-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            border-radius: var(--border-radius-xl);
+            padding: 3rem;
+            box-shadow: var(--shadow-deep);
+            margin: 3rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            backdrop-filter: blur(20px);
+        }
+
+        .beta-offer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light), var(--color-success));
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .price-tag {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            color: white;
+            font-size: 4rem;
+            font-weight: 900;
+            padding: 1.5rem 3rem;
+            border-radius: var(--border-radius-lg);
+            display: inline-block;
+            margin: 1rem 0;
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
+            font-family: var(--font-display);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-tag::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--color-text-muted);
+            font-size: 1.8rem;
+            margin-left: 1rem;
+            opacity: 0.7;
+        }
+
+        .beta-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--color-accent);
+            line-height: 1;
+            font-family: var(--font-display);
+            text-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+        }
+
+        .stat-label {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== GUARANTEE BADGE ===== */
+        .guarantee-badge {
+            background: linear-gradient(135deg, var(--color-success), #059669);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        /* ===== KOFI BUTTON STYLING ===== */
+        .kofi-button {
+            background: linear-gradient(135deg, #29abe0, #1e8bb8) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.5rem 4rem !important;
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+            border-radius: var(--border-radius) !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 1rem !important;
+            text-decoration: none !important;
+            box-shadow: 0 15px 35px rgba(41, 171, 224, 0.3) !important;
+            font-family: var(--font-sans) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+
+        .kofi-button:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 20px 40px rgba(41, 171, 224, 0.4) !important;
+        }
+
+        /* ===== BENEFITS GRID ===== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--color-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-deep);
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: var(--border-radius-xl);
+            padding: 4rem;
+            margin: 4rem auto;
+            max-width: 900px;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial {
+            text-align: center;
+            font-style: italic;
+            color: var(--color-text);
+            font-size: 1.2rem;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .testimonial::before {
+            content: '"';
+            font-size: 6rem;
+            color: var(--color-accent);
+            opacity: 0.1;
+            position: absolute;
+            top: -30px;
+            left: -10px;
+            font-family: serif;
+        }
+
+        .testimonial-author {
+            margin-top: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+        }
+
+        /* ===== DEMO SECTION ===== */
+        .demo-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            border-radius: var(--border-radius-xl);
+            padding: 4rem;
+            margin: 4rem 0;
+            box-shadow: var(--shadow-deep);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+        }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            text-align: center;
+            margin-top: 6rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ===== DEMO MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-xl);
+            width: 100%;
+            max-width: 1400px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-deep);
+            animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(50px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+
+        /* ===== DEMO GRID LAYOUT ===== */
+        .demo-modal-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 0;
+            height: 600px;
+        }
+
+        /* ===== DEMO CONTROLS ===== */
+        .demo-controls {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 2rem;
+            border-right: 1px solid var(--color-border);
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .controls-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .controls-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-display);
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+            animation: slideIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .control-group:nth-child(2) { animation-delay: 0.1s; }
+        .control-group:nth-child(3) { animation-delay: 0.2s; }
+        .control-group:nth-child(4) { animation-delay: 0.3s; }
+        .control-group:nth-child(5) { animation-delay: 0.4s; }
+        .control-group:nth-child(6) { animation-delay: 0.5s; }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .demo-badge {
+            background: var(--color-accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* ===== COLOR PICKER ===== */
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 3px var(--color-primary), 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .color-option.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* ===== TOGGLE SWITCHES ===== */
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--border-radius-sm);
+            border: 2px solid var(--color-border);
+            transition: all 0.3s;
+        }
+
+        .toggle-item:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 5px 15px rgba(124, 58, 237, 0.1);
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 32px;
+            background: #cbd5e1;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: var(--color-success);
+        }
+
+        .toggle-slider {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(28px);
+        }
+
+        .toggle-label {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .toggle-description {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ===== PRICE CONTROLS ===== */
+        .price-controls {
+            background: white;
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            border: 2px solid var(--color-border);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .price-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .price-label {
+            flex: 1;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .price-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .price-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--color-border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .price-btn:hover {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .price-display {
+            min-width: 100px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.2rem;
+        }
+
+        /* ===== DEMO PREVIEW ===== */
+        .demo-preview {
+            padding: 2rem;
+            background: white;
+            overflow-y: auto;
+            height: 600px;
+            position: relative;
+        }
+
+        .preview-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            min-height: 500px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .preview-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .preview-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .preview-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0;
+            font-family: var(--font-display);
+        }
+
+        .preview-title {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .preview-content {
+            padding: 2rem;
+        }
+
+        /* ===== VIDEO SECTION ===== */
+        .video-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 2px dashed var(--color-border);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .video-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .video-preview {
+            background: #333;
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-preview::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(124, 58, 237, 0.3), rgba(59, 130, 246, 0.3));
+        }
+
+        /* ===== SESSION TYPES ===== */
+        .session-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .session-card {
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            background: white;
+        }
+
+        .session-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.1);
+        }
+
+        .session-card.featured {
+            border-color: var(--color-accent);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(124, 58, 237, 0.02));
+        }
+
+        .session-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .session-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0.5rem 0;
+        }
+
+        .session-price {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin: 0.5rem 0;
+            font-family: var(--font-display);
+        }
+
+        .session-price.free {
+            color: var(--color-success);
+        }
+
+        .session-duration {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .session-description {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+
+        /* ===== TESTIMONIALS PREVIEW ===== */
+        .testimonials-preview {
+            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid #f59e0b;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .testimonial-text {
+            color: #92400e;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            color: #92400e;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ===== PAYMENT PREVIEW ===== */
+        .payment-preview {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 2px solid #bae6fd;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: #3b82f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .payment-details {
+            background: white;
+            border-radius: var(--border-radius-sm);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .payment-row.total {
+            border-top: 2px solid #e2e8f0;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-weight: 700;
+        }
+
+        /* ===== TIME SLOTS ===== */
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .time-slot:hover {
+            border-color: var(--color-accent);
+            background: rgba(124, 58, 237, 0.05);
+        }
+
+        .time-slot.selected {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        /* ===== CTA BUTTON ===== */
+        .preview-cta {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        }
+
+        /* ===== DEMO FOOTER ===== */
+        .demo-footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .demo-notice {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #fcd34d;
+            border-radius: 100px;
+            padding: 1rem 2rem;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar {
+            height: 4px;
+            background: var(--color-border);
+            border-radius: 2px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 2px;
+        }
+
+        /* ===== MOBILE RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem !important;
+            }
+            
+            /* DEMO MODAL MOBILE FIXES */
+            .demo-modal-grid {
+                grid-template-columns: 1fr !important;
+                height: auto !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+            }
+            
+            .demo-controls {
+                order: 2;
+                margin-top: 0;
+                border-right: none;
+                border-top: 1px solid var(--color-border);
+                padding: 1.5rem;
+                height: auto;
+                max-height: 50vh;
+                overflow-y: auto;
+            }
+            
+            .demo-preview {
+                order: 1;
+                height: auto !important;
+                min-height: 400px;
+                padding: 1rem;
+                overflow-y: visible;
+            }
+            
+            .preview-container {
+                max-width: 100% !important;
+                min-height: 400px;
+            }
+            
+            .session-types-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .modal-content {
+                width: 95% !important;
+                max-height: 95vh !important;
+                margin: 0.5rem;
+                border-radius: var(--border-radius);
+            }
+            
+            .modal-body {
+                padding: 0 !important;
+            }
+            
+            .modal-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .modal-title {
+                font-size: 1.4rem;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .color-options {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+            
+            .price-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .price-input-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .price-display {
+                min-width: 80px;
+            }
+            
+            .preview-content {
+                padding: 1.5rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .beta-offer-card {
+                padding: 2rem;
+                margin: 2rem auto;
+            }
+            
+            .price-tag {
+                font-size: 3rem;
+                padding: 1rem 2rem;
+            }
+            
+            .beta-stats {
+                gap: 2rem;
+            }
+            
+            .stat-number {
+                font-size: 2.2rem;
+            }
+            
+            .demo-section {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .testimonials {
+                padding: 2rem;
+            }
+            
+            .hero {
+                padding: 4rem 0 2rem;
+            }
+            
+            .btn-xl {
+                padding: 1.25rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .site-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem !important;
+            }
+            
+            .beta-stats {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+            }
+            
+            .price-controls {
+                padding: 1rem;
+            }
+            
+            .demo-controls {
+                padding: 1rem;
+            }
+            
+            .controls-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .color-options {
+                grid-template-columns: repeat(5, 1fr) !important;
+            }
+            
+            .color-option {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .toggle-item {
+                padding: 0.75rem;
+                flex-wrap: wrap;
+            }
+            
+            .toggle-switch {
+                margin-left: 0;
+            }
+            
+            .session-card {
+                padding: 1.25rem 1rem;
+            }
+            
+            .session-name {
+                font-size: 1.1rem;
+            }
+            
+            .session-price {
+                font-size: 1.5rem;
+            }
+            
+            .kofi-button {
+                padding: 1.25rem 2rem !important;
+                font-size: 1.1rem !important;
+            }
+            
+            .guarantee-badge {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+                padding: 1.25rem 1.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .modal-content {
+                max-height: 100vh !important;
+                border-radius: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            
+            .modal {
+                padding: 0;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo">KAIROS</div>
+                    <div class="tagline">TIME. ELEVATED.</div>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="showDemoModal()">
+                <i class="fas fa-play-circle"></i> Experience Interactive Demo
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <i class="fas fa-flask"></i> LIMITED BETA FOR 50 FOUNDING CONSULTANTS
+            </div>
+            
+            <h1>Transform Your Booking Page Into A <span style="color: var(--color-accent);">Client Conversion Machine</span></h1>
+            
+            <p class="hero-subtitle">
+                Kairos is the premium booking engine built exclusively for consultants who charge $500+/hour. 
+                Join our beta program and get lifetime access to the tool that makes you look as premium as you are.
+            </p>
+            
+            <div class="hero-actions">
+                <button class="btn btn-primary btn-xl" onclick="document.getElementById('betaOffer').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-rocket"></i> Join Beta Program - $497
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="showDemoModal()">
+                    <i class="fas fa-magic"></i> Try Interactive Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beta Offer Card -->
+    <section class="container" id="betaOffer">
+        <div class="beta-offer-card">
+            <h2 class="text-center" style="font-size: 2.5rem; margin-bottom: 1rem;">
+                Join the Kairos Beta Program
+            </h2>
+            
+            <p class="text-center" style="color: var(--color-text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+                Limited to 50 founding consultants. Get lifetime access at 50% off.
+            </p>
+            
+            <div class="text-center">
+                <div class="price-tag">
+                    $497
+                    <span class="original-price">$997</span>
+                </div>
+                <p style="color: var(--color-success); font-weight: 600; font-size: 1.2rem; margin-top: 1rem;">
+                    <i class="fas fa-bolt"></i> 50% off launch price + lifetime updates included
+                </p>
+            </div>
+            
+            <div class="beta-stats">
+                <div class="stat-item">
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">Total Spots</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="spotsTaken">24</div>
+                    <div class="stat-label">Spots Taken</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="spotsLeft">26</div>
+                    <div class="stat-label">Spots Left</div>
+                </div>
+            </div>
+            
+            <!-- Ko-fi Button -->
+            <div class="text-center mt-3">
+                <a href="https://ko-fi.com/YOUR_USERNAME/tier/497000" 
+                   class="kofi-button" 
+                   target="_blank"
+                   id="kofiButton">
+                    <i class="fas fa-gem"></i>
+                    <span>Join Beta Program - $497</span>
+                </a>
+                <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 1rem;">
+                    <i class="fas fa-lock"></i> Secure payment via Ko-fi • 14-day refund guarantee
+                </p>
+            </div>
+            
+            <div class="guarantee-badge">
+                <i class="fas fa-shield-alt fa-2x"></i>
+                <div>
+                    <strong style="font-size: 1.1rem;">14-Day Risk-Free Guarantee</strong><br>
+                    <small>Not satisfied? Full refund within 14 days, no questions asked.</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Grid -->
+    <section class="container">
+        <h2 class="text-center" style="font-size: 2.5rem; margin-bottom: 3rem;">
+            What Beta Members Receive
+        </h2>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <h3>Personal 1:1 Setup</h3>
+                <p>60-minute Zoom call where I personally set up your perfect booking page. No technical skills needed.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>Lifetime Access</h3>
+                <p>Pay once, own forever. No subscriptions. All future updates included at no extra cost.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Priority Support</h3>
+                <p>Direct access to me for support. Jump to the front of the queue for all your questions.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-vote-yea"></i>
+                </div>
+                <h3>Shape the Product</h3>
+                <p>Your feedback directly shapes the roadmap. Build the features you actually need.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="container">
+        <div class="testimonials">
+            <h3 class="text-center" style="margin-bottom: 3rem; font-size: 2rem;">What Early Beta Members Say</h3>
+            
+            <div class="testimonial">
+                "I've been searching for a booking tool that doesn't make my $10,000 consulting packages look like dentist appointments. Kairos is exactly what I needed. The beta program was a no-brainer at $497."
+                <div class="testimonial-author">– Sarah Chen, Executive Coach ($750/hr)</div>
+            </div>
+            
+            <div class="testimonial mt-3">
+                "The personal setup call alone was worth the investment. I got my perfect booking page in 45 minutes. My clients now comment on how professional the booking experience feels."
+                <div class="testimonial-author">– Marcus Johnson, Scaling Consultant</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="container">
+        <div class="demo-section">
+            <div class="text-center mb-3">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">See Kairos in Action</h2>
+                <p style="color: var(--color-text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+                    Try our interactive demo to experience the powerful customization options available.
+                </p>
+            </div>
+            
+            <div class="text-center mt-3">
+                <button class="btn btn-primary btn-xl" onclick="showDemoModal()">
+                    <i class="fas fa-magic"></i> Launch Interactive Demo
+                </button>
+                <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 1rem;">
+                    Customize colors, pricing, features, and see live updates in the preview
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container">
+        <h2 class="text-center" style="font-size: 2.5rem; margin-bottom: 3rem;">Beta Program FAQ</h2>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 2.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-medium);">
+                <h4 style="color: var(--color-primary); margin-bottom: 1rem; font-size: 1.3rem;">What happens after I join the beta?</h4>
+                <p style="color: var(--color-text);">You'll immediately receive an email with access to a private portal. From there, you can schedule your 1-hour setup call. I'll personally build your booking page within 48 hours.</p>
+            </div>
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 2.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-medium);">
+                <h4 style="color: var(--color-primary); margin-bottom: 1rem; font-size: 1.3rem;">Is the product fully built yet?</h4>
+                <p style="color: var(--color-text);">The core booking engine is complete and working. Some advanced features are in active development. As a beta member, you get early access to these features as they're released.</p>
+            </div>
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 2.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-medium);">
+                <h4 style="color: var(--color-primary); margin-bottom: 1rem; font-size: 1.3rem;">What's your refund policy?</h4>
+                <p style="color: var(--color-text);">14-day money-back guarantee. If within 14 days you're not satisfied with Kairos, I'll refund your $497, no questions asked.</p>
+            </div>
+            
+            <div style="background: white; border-radius: var(--border-radius-lg); padding: 2.5rem; box-shadow: var(--shadow-medium);">
+                <h4 style="color: var(--color-primary); margin-bottom: 1rem; font-size: 1.3rem;">When will beta spots run out?</h4>
+                <p style="color: var(--color-text);">Only 50 spots total. Currently <strong id="spotsLeftText">26 spots left</strong>. When they're gone, beta closes and you'll have to wait for the public launch at $997.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="container" style="margin: 6rem auto 4rem;">
+        <div class="text-center">
+            <h2 style="font-size: 3rem; margin-bottom: 1.5rem; line-height: 1.1;">Ready to Transform Your<br>Booking Experience?</h2>
+            <p style="color: var(--color-text-muted); font-size: 1.2rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Join 24 other elite consultants who are already shaping the future of premium booking.
+            </p>
+            
+            <a href="https://ko-fi.com/YOUR_USERNAME/tier/497000" 
+               class="kofi-button btn-xl" 
+               target="_blank"
+               style="font-size: 1.3rem; padding: 1.5rem 4rem; text-decoration: none;">
+                <i class="fas fa-gem"></i>
+                <span>Claim Your Beta Spot - $497</span>
+            </a>
+            
+            <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 1.5rem;">
+                <i class="fas fa-exclamation-triangle"></i> Beta closes when all 50 spots are filled
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Kairos Beta Program &copy; <span id="currentYear"></span>. Limited to 50 founding consultants.</p>
+            <div class="footer-links">
+                <a href="#" onclick="showDemoModal()">Interactive Demo</a>
+                <a href="mailto:hello@kairos.example">Contact</a>
+                <a href="#">Refund Policy</a>
+                <a href="#">Terms</a>
+            </div>
+            <p class="mt-2" style="font-size: 0.9rem; color: var(--color-text-muted);">
+                This is a beta program. Features are in active development.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Interactive Demo Modal -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Interactive Kairos Demo</h3>
+                <button class="modal-close" onclick="closeDemoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="demo-modal-grid">
+                    <!-- Left: Controls Panel -->
+                    <div class="demo-controls">
+                        <div class="controls-header">
+                            <div>
+                                <h4 class="controls-title">Customization Panel</h4>
+                                <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+                                    Toggle features and see live updates
+                                </p>
+                            </div>
+                            <span class="demo-badge">INTERACTIVE</span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="demoProgress"></div>
+                        </div>
+
+                        <!-- Color Theme Selector -->
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Brand Colors</span>
+                            </div>
+                            <div class="color-options">
+                                <div class="color-option active" style="background: #7c3aed;" onclick="changeTheme('purple')" data-color="purple"></div>
+                                <div class="color-option" style="background: #0f766e;" onclick="changeTheme('teal')" data-color="teal"></div>
+                                <div class="color-option" style="background: #dc2626;" onclick="changeTheme('red')" data-color="red"></div>
+                                <div class="color-option" style="background: #059669;" onclick="changeTheme('green')" data-color="green"></div>
+                                <div class="color-option" style="background: #d97706;" onclick="changeTheme('orange')" data-color="orange"></div>
+                            </div>
+                        </div>
+
+                        <!-- Feature Toggles -->
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Feature Controls</span>
+                            </div>
+                            <div class="toggle-group">
+                                <div class="toggle-item">
+                                    <div>
+                                        <div class="toggle-label">Video Introduction</div>
+                                        <div class="toggle-description">Embed a personal welcome video</div>
+                                    </div>
+                                    <div class="toggle-switch" onclick="toggleFeature('video')" id="videoToggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
+                                </div>
+                                <div class="toggle-item">
+                                    <div>
+                                        <div class="toggle-label">Payment Integration</div>
+                                        <div class="toggle-description">Accept payments with Stripe</div>
+                                    </div>
+                                    <div class="toggle-switch active" onclick="toggleFeature('payment')" id="paymentToggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
+                                </div>
+                                <div class="toggle-item">
+                                    <div>
+                                        <div class="toggle-label">Testimonials Display</div>
+                                        <div class="toggle-description">Show client testimonials</div>
+                                    </div>
+                                    <div class="toggle-switch active" onclick="toggleFeature('testimonials')" id="testimonialsToggle">
+                                        <div class="toggle-slider"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Controls -->
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Session Pricing</span>
+                            </div>
+                            <div class="price-controls">
+                                <div class="price-row">
+                                    <span class="price-label">Strategy Session</span>
+                                    <div class="price-input-group">
+                                        <button class="price-btn" onclick="adjustPrice('strategy', -100)">-</button>
+                                        <span class="price-display" id="strategyPrice">$1,250</span>
+                                        <button class="price-btn" onclick="adjustPrice('strategy', 100)">+</button>
+                                    </div>
+                                </div>
+                                <div class="price-row">
+                                    <span class="price-label">VIP Day</span>
+                                    <div class="price-input-group">
+                                        <button class="price-btn" onclick="adjustPrice('vip', -500)">-</button>
+                                        <span class="price-display" id="vipPrice">$8,500</span>
+                                        <button class="price-btn" onclick="adjustPrice('vip', 500)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Demo Info -->
+                        <div style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: var(--border-radius); border: 2px solid var(--color-border);">
+                            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem; font-size: 1.1rem;">
+                                <i class="fas fa-info-circle"></i> This is an Interactive Demo
+                            </h4>
+                            <p style="color: var(--color-text-muted); font-size: 0.9rem; margin: 0;">
+                                Everything you customize here is exactly what you can control with your own Kairos booking page as a beta member.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Preview -->
+                    <div class="demo-preview">
+                        <div class="preview-container" id="previewContainer">
+                            <!-- Preview Header -->
+                            <div class="preview-header" id="previewHeader">
+                                <div class="preview-brand">
+                                    <div class="preview-logo" id="previewLogo">KD</div>
+                                    <div>
+                                        <h3 class="preview-name" id="previewName">Jane Doe</h3>
+                                        <p class="preview-title" id="previewTitle">Executive Coach & Scaling Expert</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preview Content -->
+                            <div class="preview-content">
+                                <!-- Video Section (Toggleable) -->
+                                <div class="video-section" id="videoSection" style="display: none;">
+                                    <div class="video-header">
+                                        <div class="video-icon">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="margin: 0; color: var(--color-primary);">Welcome Video</h4>
+                                            <p style="margin: 0; color: var(--color-text-muted); font-size: 0.9rem;">Get to know me before we meet</p>
+                                        </div>
+                                    </div>
+                                    <div class="video-preview">
+                                        <i class="fas fa-play-circle" style="font-size: 3rem; opacity: 0.8; z-index: 2; position: relative;"></i>
+                                        <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; z-index: 2;">
+                                            2:30
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Session Types -->
+                                <div style="margin-top: 1rem;">
+                                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.5rem;">Select Your Session</h3>
+                                    
+                                    <div class="session-types-grid">
+                                        <div class="session-card" onclick="selectSession('intro')">
+                                            <div class="session-badge">Most Popular</div>
+                                            <div class="session-name">Discovery Call</div>
+                                            <div class="session-price free">FREE</div>
+                                            <div class="session-duration">15 minutes</div>
+                                            <div class="session-description">Quick introduction to explore fit</div>
+                                        </div>
+                                        
+                                        <div class="session-card featured" onclick="selectSession('strategy')">
+                                            <div class="session-badge">Recommended</div>
+                                            <div class="session-name">Strategy Session</div>
+                                            <div class="session-price" id="previewStrategyPrice">$1,250</div>
+                                            <div class="session-duration">60 minutes</div>
+                                            <div class="session-description">Deep dive with actionable plan</div>
+                                        </div>
+                                        
+                                        <div class="session-card" onclick="selectSession('vip')">
+                                            <div class="session-name">VIP Day</div>
+                                            <div class="session-price" id="previewVipPrice">$8,500</div>
+                                            <div class="session-duration">Full Day</div>
+                                            <div class="session-description">Intensive transformation session</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Testimonials (Toggleable) -->
+                                <div class="testimonials-preview" id="testimonialsSection">
+                                    <div class="testimonial-text">
+                                        "Jane transformed our strategy in one session. The booking experience itself told me I was in good hands."
+                                    </div>
+                                    <div class="testimonial-author">
+                                        <i class="fas fa-star" style="color: #fbbf24;"></i> CEO, Tech Startup
+                                    </div>
+                                </div>
+
+                                <!-- Payment (Toggleable) -->
+                                <div class="payment-preview" id="paymentSection">
+                                    <div class="payment-header">
+                                        <div class="payment-icon">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="margin: 0; color: var(--color-primary);">Secure Booking</h4>
+                                            <p style="margin: 0; color: var(--color-text-muted); font-size: 0.9rem;">
+                                                Your time is protected with our commitment system
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-details">
+                                        <div class="payment-row">
+                                            <span>Strategy Session</span>
+                                            <span id="previewPaymentPrice">$1,250</span>
+                                        </div>
+                                        <div class="payment-row">
+                                            <span>Duration</span>
+                                            <span>60 minutes</span>
+                                        </div>
+                                        <div class="payment-row total">
+                                            <span>Total</span>
+                                            <span id="previewTotalPrice">$1,250</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time Selection -->
+                                <div style="margin-top: 2rem;">
+                                    <h4 style="color: var(--color-primary); margin-bottom: 1rem;">Select Your Time</h4>
+                                    <div class="time-slots-grid" id="timeSlots">
+                                        <!-- Time slots will be generated here -->
+                                    </div>
+                                </div>
+
+                                <!-- CTA Button -->
+                                <div class="preview-cta">
+                                    <button class="cta-button" onclick="showBookingConfirmation()">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>Book Strategy Session</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Demo Footer -->
+                        <div class="demo-footer">
+                            <div class="demo-notice">
+                                <i class="fas fa-magic"></i>
+                                <span>Live Preview: All changes update in real-time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GLOBAL STATE =====
+        let demoState = {
+            theme: 'purple',
+            features: {
+                video: false,
+                payment: true,
+                testimonials: true
+            },
+            prices: {
+                strategy: 1250,
+                vip: 8500
+            },
+            selectedSession: 'strategy',
+            selectedTime: null,
+            progress: 25
+        };
+
+        // ===== THEME SYSTEM =====
+        const themes = {
+            purple: { primary: '#7c3aed', light: '#8b5cf6', name: 'Purple Majesty' },
+            teal: { primary: '#0f766e', light: '#0d9488', name: 'Deep Teal' },
+            red: { primary: '#dc2626', light: '#ef4444', name: 'Crimson Red' },
+            green: { primary: '#059669', light: '#10b981', name: 'Emerald Green' },
+            orange: { primary: '#d97706', light: '#f59e0b', name: 'Amber Orange' }
+        };
+
+        function changeTheme(theme) {
+            demoState.theme = theme;
+            const colors = themes[theme];
+            
+            // Update CSS variables
+            document.documentElement.style.setProperty('--color-accent', colors.primary);
+            document.documentElement.style.setProperty('--color-accent-light', colors.light);
+            
+            // Update preview header
+            const header = document.getElementById('previewHeader');
+            header.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.light})`;
+            
+            // Update active color option
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            document.querySelector(`.color-option[data-color="${theme}"]`).classList.add('active');
+            
+            // Update progress
+            updateProgress(5);
+            updateDemoStats();
+        }
+
+        // ===== FEATURE TOGGLES =====
+        function toggleFeature(feature) {
+            demoState.features[feature] = !demoState.features[feature];
+            const toggle = document.getElementById(`${feature}Toggle`);
+            const section = document.getElementById(`${feature}Section`);
+            
+            toggle.classList.toggle('active');
+            
+            if (demoState.features[feature]) {
+                section.style.display = 'block';
+                section.style.animation = 'slideIn 0.5s ease-out';
+            } else {
+                section.style.display = 'none';
+            }
+            
+            updateProgress(5);
+            updateDemoStats();
+        }
+
+        // ===== PRICE CONTROLS =====
+        function adjustPrice(type, amount) {
+            if (type === 'strategy') {
+                demoState.prices.strategy = Math.max(500, demoState.prices.strategy + amount);
+                document.getElementById('strategyPrice').textContent = formatPrice(demoState.prices.strategy);
+                document.getElementById('previewStrategyPrice').textContent = formatPrice(demoState.prices.strategy);
+                document.getElementById('previewPaymentPrice').textContent = formatPrice(demoState.prices.strategy);
+                document.getElementById('previewTotalPrice').textContent = formatPrice(demoState.prices.strategy);
+                
+                // Animation
+                const element = document.getElementById('previewStrategyPrice');
+                element.style.animation = 'none';
+                setTimeout(() => {
+                    element.style.animation = 'pulse 0.5s ease-out';
+                }, 10);
+            } else if (type === 'vip') {
+                demoState.prices.vip = Math.max(3000, demoState.prices.vip + amount);
+                document.getElementById('vipPrice').textContent = formatPrice(demoState.prices.vip);
+                document.getElementById('previewVipPrice').textContent = formatPrice(demoState.prices.vip);
+                
+                // Animation
+                const element = document.getElementById('previewVipPrice');
+                element.style.animation = 'none';
+                setTimeout(() => {
+                    element.style.animation = 'pulse 0.5s ease-out';
+                }, 10);
+            }
+            
+            updateProgress(3);
+            updateDemoStats();
+        }
+
+        function formatPrice(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // ===== SESSION SELECTION =====
+        function selectSession(type) {
+            demoState.selectedSession = type;
+            
+            // Update UI
+            document.querySelectorAll('.session-card').forEach(card => {
+                card.classList.remove('featured');
+            });
+            document.querySelector(`.session-card[onclick*="${type}"]`).classList.add('featured');
+            
+            updateProgress(3);
+            updateDemoStats();
+        }
+
+        // ===== TIME SLOTS GENERATION =====
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlots');
+            container.innerHTML = '';
+            
+            const now = luxon.DateTime.now();
+            const slots = [];
+            
+            // Generate slots for next 3 days
+            for (let day = 1; day <= 3; day++) {
+                const date = now.plus({ days: day });
+                const dayName = date.toFormat('EEE');
+                const dayNumber = date.toFormat('d');
+                const month = date.toFormat('MMM');
+                
+                for (let hour = 9; hour <= 17; hour += 2) {
+                    const timeString = `${hour}:00`;
+                    const displayTime = `${hour}:00 ${hour < 12 ? 'AM' : 'PM'}`;
+                    
+                    const slot = document.createElement('div');
+                    slot.className = 'time-slot';
+                    slot.innerHTML = `
+                        <div style="font-size: 0.9rem; font-weight: 600;">${dayName} ${dayNumber} ${month}</div>
+                        <div style="font-size: 1.1rem; font-weight: 700;">${displayTime}</div>
+                    `;
+                    
+                    slot.addEventListener('click', () => {
+                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                        slot.classList.add('selected');
+                        demoState.selectedTime = `${dayName} ${dayNumber} ${month}, ${displayTime}`;
+                        updateProgress(5);
+                        updateDemoStats();
+                    });
+                    
+                    // Randomly mark some as booked
+                    if (Math.random() < 0.3) {
+                        slot.style.opacity = '0.5';
+                        slot.style.textDecoration = 'line-through';
+                        slot.style.cursor = 'not-allowed';
+                        slot.onclick = null;
+                    }
+                    
+                    slots.push(slot);
+                }
+            }
+            
+            // Add to container
+            slots.forEach(slot => container.appendChild(slot));
+            
+            // Select first available slot
+            const firstAvailable = container.querySelector('.time-slot:not([style*="opacity: 0.5"])');
+            if (firstAvailable) {
+                firstAvailable.click();
+            }
+        }
+
+        // ===== PROGRESS SYSTEM =====
+        function updateProgress(increment) {
+            demoState.progress = Math.min(100, demoState.progress + increment);
+            document.getElementById('demoProgress').style.width = `${demoState.progress}%`;
+        }
+
+        function updateDemoStats() {
+            console.log('Demo State:', demoState);
+            // You can add analytics tracking here
+        }
+
+        // ===== BOOKING CONFIRMATION =====
+        function showBookingConfirmation() {
+            if (!demoState.selectedTime) {
+                alert('Please select a time slot first');
+                return;
+            }
+            
+            // Create confirmation modal
+            const confirmationHTML = `
+                <div style="text-align: center; padding: 3rem 2rem;">
+                    <div style="width: 100px; height: 100px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 3rem;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    
+                    <h3 style="color: var(--color-primary); margin-bottom: 1rem; font-size: 2rem;">Booking Confirmed!</h3>
+                    
+                    <div style="background: #f8fafc; border-radius: var(--border-radius); padding: 2rem; margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span style="color: var(--color-text-muted);">Session:</span>
+                            <span style="font-weight: 700; color: var(--color-primary);">Strategy Session</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span style="color: var(--color-text-muted);">Date & Time:</span>
+                            <span style="font-weight: 700; color: var(--color-primary);">${demoState.selectedTime}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 1rem; border-top: 2px solid var(--color-border);">
+                            <span style="color: var(--color-text-muted);">Amount:</span>
+                            <span style="font-weight: 900; color: var(--color-primary); font-size: 1.5rem;">${formatPrice(demoState.prices.strategy)}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-radius: var(--border-radius); padding: 2rem; margin-bottom: 2rem; border: 2px solid #fcd34d;">
+                        <h4 style="color: #92400e; margin-bottom: 1rem; font-size: 1.3rem;">This Was a Simulation</h4>
+                        <p style="color: #92400e; margin-bottom: 1.5rem;">
+                            You just experienced what your clients will see. As a beta member, you get complete control over every aspect of this booking experience.
+                        </p>
+                        <a href="https://ko-fi.com/YOUR_USERNAME/tier/497000" 
+                           class="btn btn-primary" 
+                           target="_blank"
+                           style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-gem"></i>
+                            Join Beta Program - $497
+                        </a>
+                    </div>
+                    
+                    <button class="btn btn-secondary" onclick="resetDemo()">
+                        <i class="fas fa-redo"></i> Try Another Simulation
+                    </button>
+                </div>
+            `;
+            
+            const previewContent = document.querySelector('.preview-content');
+            previewContent.innerHTML = confirmationHTML;
+            
+            // Update progress to 100%
+            demoState.progress = 100;
+            document.getElementById('demoProgress').style.width = '100%';
+        }
+
+        function resetDemo() {
+            // Reset state
+            demoState = {
+                theme: 'purple',
+                features: {
+                    video: false,
+                    payment: true,
+                    testimonials: true
+                },
+                prices: {
+                    strategy: 1250,
+                    vip: 8500
+                },
+                selectedSession: 'strategy',
+                selectedTime: null,
+                progress: 25
+            };
+            
+            // Reset UI
+            changeTheme('purple');
+            
+            // Reset toggles
+            toggleFeature('video');
+            toggleFeature('payment');
+            toggleFeature('testimonials');
+            
+            // Reset prices
+            document.getElementById('strategyPrice').textContent = formatPrice(1250);
+            document.getElementById('vipPrice').textContent = formatPrice(8500);
+            
+            // Reset session selection
+            selectSession('strategy');
+            
+            // Regenerate time slots
+            setTimeout(() => {
+                const previewContent = document.querySelector('.preview-content');
+                previewContent.innerHTML = `
+                    <!-- Video Section -->
+                    <div class="video-section" id="videoSection" style="display: none;">
+                        <div class="video-header">
+                            <div class="video-icon">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0; color: var(--color-primary);">Welcome Video</h4>
+                                <p style="margin: 0; color: var(--color-text-muted); font-size: 0.9rem;">Get to know me before we meet</p>
+                            </div>
+                        </div>
+                        <div class="video-preview">
+                            <i class="fas fa-play-circle" style="font-size: 3rem; opacity: 0.8; z-index: 2; position: relative;"></i>
+                            <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; z-index: 2;">
+                                2:30
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Types -->
+                    <div style="margin-top: 1rem;">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.5rem;">Select Your Session</h3>
+                        
+                        <div class="session-types-grid">
+                            <div class="session-card" onclick="selectSession('intro')">
+                                <div class="session-badge">Most Popular</div>
+                                <div class="session-name">Discovery Call</div>
+                                <div class="session-price free">FREE</div>
+                                <div class="session-duration">15 minutes</div>
+                                <div class="session-description">Quick introduction to explore fit</div>
+                            </div>
+                            
+                            <div class="session-card featured" onclick="selectSession('strategy')">
+                                <div class="session-badge">Recommended</div>
+                                <div class="session-name">Strategy Session</div>
+                                <div class="session-price" id="previewStrategyPrice">$1,250</div>
+                                <div class="session-duration">60 minutes</div>
+                                <div class="session-description">Deep dive with actionable plan</div>
+                            </div>
+                            
+                            <div class="session-card" onclick="selectSession('vip')">
+                                <div class="session-name">VIP Day</div>
+                                <div class="session-price" id="previewVipPrice">$8,500</div>
+                                <div class="session-duration">Full Day</div>
+                                <div class="session-description">Intensive transformation session</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonials -->
+                    <div class="testimonials-preview" id="testimonialsSection">
+                        <div class="testimonial-text">
+                            "Jane transformed our strategy in one session. The booking experience itself told me I was in good hands."
+                        </div>
+                        <div class="testimonial-author">
+                            <i class="fas fa-star" style="color: #fbbf24;"></i> CEO, Tech Startup
+                        </div>
+                    </div>
+
+                    <!-- Payment -->
+                    <div class="payment-preview" id="paymentSection">
+                        <div class="payment-header">
+                            <div class="payment-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0; color: var(--color-primary);">Secure Booking</h4>
+                                <p style="margin: 0; color: var(--color-text-muted); font-size: 0.9rem;">
+                                    Your time is protected with our commitment system
+                                </p>
+                            </div>
+                        </div>
+                        <div class="payment-details">
+                            <div class="payment-row">
+                                <span>Strategy Session</span>
+                                <span id="previewPaymentPrice">$1,250</span>
+                            </div>
+                            <div class="payment-row">
+                                <span>Duration</span>
+                                <span>60 minutes</span>
+                            </div>
+                            <div class="payment-row total">
+                                <span>Total</span>
+                                <span id="previewTotalPrice">$1,250</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Time Selection -->
+                    <div style="margin-top: 2rem;">
+                        <h4 style="color: var(--color-primary); margin-bottom: 1rem;">Select Your Time</h4>
+                        <div class="time-slots-grid" id="timeSlots"></div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <div class="preview-cta">
+                        <button class="cta-button" onclick="showBookingConfirmation()">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Book Strategy Session</span>
+                        </button>
+                    </div>
+                `;
+                
+                // Regenerate time slots
+                generateTimeSlots();
+                
+                // Update preview prices
+                document.getElementById('previewStrategyPrice').textContent = formatPrice(demoState.prices.strategy);
+                document.getElementById('previewVipPrice').textContent = formatPrice(demoState.prices.vip);
+                document.getElementById('previewPaymentPrice').textContent = formatPrice(demoState.prices.strategy);
+                document.getElementById('previewTotalPrice').textContent = formatPrice(demoState.prices.strategy);
+            }, 100);
+        }
+
+        // ===== MODAL CONTROLS =====
+        function showDemoModal() {
+            document.getElementById('demoModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize demo
+            setTimeout(() => {
+                generateTimeSlots();
+                updateDemoStats();
+            }, 100);
+        }
+
+        function closeDemoModal() {
+            document.getElementById('demoModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetDemo();
+        }
+
+        // ===== SPOT COUNTER =====
+        let spotsTaken = 24;
+        let totalSpots = 50;
+
+        function updateSpotCounter() {
+            document.getElementById('spotsTaken').textContent = spotsTaken;
+            document.getElementById('spotsLeft').textContent = totalSpots - spotsTaken;
+            document.getElementById('spotsLeftText').textContent = (totalSpots - spotsTaken) + ' spots left';
+            
+            // Update Ko-fi button if sold out
+            const kofiButton = document.getElementById('kofiButton');
+            if (spotsTaken >= totalSpots) {
+                kofiButton.innerHTML = '<i class="fas fa-times"></i><span>Beta Program Full</span>';
+                kofiButton.style.background = '#64748b !important';
+                kofiButton.style.cursor = 'not-allowed !important';
+                kofiButton.onclick = function(e) {
+                    e.preventDefault();
+                    alert('Beta program is currently full. Join the waitlist for next opening.');
+                };
+            }
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Update spot counter
+            updateSpotCounter();
+            
+            // Simulate spot filling (remove in production)
+            setInterval(() => {
+                if (spotsTaken < totalSpots && Math.random() > 0.7) {
+                    spotsTaken++;
+                    updateSpotCounter();
+                }
+            }, 30000);
+            
+            // Initialize demo state
+            changeTheme('purple');
+            
+            // Close modal on outside click
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('demoModal')) {
+                    closeDemoModal();
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeDemoModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
